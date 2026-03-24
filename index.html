@@ -169,6 +169,51 @@
       color: #8b949e;
       font-family: monospace;
     }
+
+    /* ── Direction toggle ── */
+    .dir-toggle {
+      display: flex;
+      border: 1px solid #30363d;
+      border-radius: 5px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .dir-btn {
+      padding: 4px 12px;
+      border: none;
+      background: transparent;
+      color: #8b949e;
+      cursor: pointer;
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .dir-btn + .dir-btn {
+      border-left: 1px solid #30363d;
+    }
+
+    .dir-btn.active {
+      background: #1f6feb;
+      color: #fff;
+    }
+
+    .dir-btn:hover:not(.active) {
+      background: #21262d;
+      color: #c9d1d9;
+    }
+
+    #effective-c {
+      font-size: 10px;
+      color: #6e7681;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      padding: 2px 14px 4px;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -206,11 +251,18 @@
 
   <!-- ③ Resultaat -->
   <div class="panel">
-    <div class="panel-header">③ Resultaat: f(z) = z^c</div>
+    <div class="panel-header" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <span>③ Resultaat: <span id="formula-label" style="font-family:'Courier New',monospace;color:#58a6ff">f(z) = z^c</span></span>
+      <div class="dir-toggle">
+        <button class="dir-btn active" id="btn-forward" onclick="setDirection(false)">→ &nbsp;Voorwaarts &nbsp;z^c</button>
+        <button class="dir-btn"        id="btn-inverse" onclick="setDirection(true)" >← &nbsp;Invers &nbsp;z^(1/c)</button>
+      </div>
+    </div>
     <div class="panel-body" id="result-panel">
       <div id="result-placeholder">Upload een afbeelding<br />en kies een waarde voor c<br /><br /><span style="font-size:11px;color:#30363d">Tip: probeer c = 0.5 + 0.5i<br />voor een spiraaleffect</span></div>
       <canvas id="result-canvas"></canvas>
     </div>
+    <div id="effective-c">&nbsp;</div>
     <div class="result-footer">
       <button class="btn btn-transform" onclick="runTransform()">▶ Transformeer</button>
       <span id="status-text"></span>
@@ -223,8 +275,26 @@
 // ── State ────────────────────────────────────────────────────────────────────
 let cReal = 2.0;
 let cImag = 0.0;
+let useInverse = false;
 let sourceImgEl = null;
 let transformTimer = null;
+
+// ── Direction toggle ──────────────────────────────────────────────────────────
+function setDirection(inv) {
+  useInverse = inv;
+  document.getElementById('btn-forward').classList.toggle('active', !inv);
+  document.getElementById('btn-inverse').classList.toggle('active',  inv);
+  updateCLabel();
+  scheduleTransform();
+}
+
+// Return the effective exponent: c for forward, 1/c for inverse
+function getEffectiveC() {
+  if (!useInverse) return { a: cReal, b: cImag };
+  const denom = cReal * cReal + cImag * cImag;
+  if (denom < 1e-18) return { a: 0, b: 0 };
+  return { a: cReal / denom, b: -cImag / denom };
+}
 
 // ── C-selector (p5.js instance) ──────────────────────────────────────────────
 new p5(function (p) {
@@ -331,8 +401,22 @@ new p5(function (p) {
 
 function updateCLabel() {
   const sign = cImag >= 0 ? '+' : '−';
-  document.getElementById('c-label').textContent =
-    `c = ${cReal.toFixed(2)} ${sign} ${Math.abs(cImag).toFixed(2)}i`;
+  let text = `c = ${cReal.toFixed(2)} ${sign} ${Math.abs(cImag).toFixed(2)}i`;
+
+  const ec = getEffectiveC();
+  const esign = ec.b >= 0 ? '+' : '−';
+
+  if (useInverse) {
+    text += `     1/c = ${ec.a.toFixed(3)} ${esign} ${Math.abs(ec.b).toFixed(3)}i`;
+    document.getElementById('formula-label').textContent = 'f(z) = z^(1/c)';
+    document.getElementById('effective-c').textContent =
+      `effectieve exponent: ${ec.a.toFixed(3)} ${esign} ${Math.abs(ec.b).toFixed(3)}i`;
+  } else {
+    document.getElementById('formula-label').textContent = 'f(z) = z^c';
+    document.getElementById('effective-c').textContent = '\u00a0';
+  }
+
+  document.getElementById('c-label').textContent = text;
 }
 
 // ── File upload ───────────────────────────────────────────────────────────────
@@ -399,8 +483,7 @@ function performTransform() {
   const resImg  = resCtx.createImageData(RES, RES);
   const resPx   = resImg.data;
 
-  const a = cReal;
-  const b = cImag;
+  const { a, b } = getEffectiveC();
 
   // ── Pixel loop ────────────────────────────────────────────────────────────
   // For each output pixel (px,py):
@@ -454,9 +537,11 @@ function performTransform() {
 
   resCtx.putImageData(resImg, 0, 0);
 
-  const sign = cImag >= 0 ? '+' : '−';
+  const ec = getEffectiveC();
+  const sign = ec.b >= 0 ? '+' : '−';
+  const mode = useInverse ? '1/c' : 'c';
   document.getElementById('status-text').textContent =
-    `Klaar — c = ${cReal.toFixed(2)} ${sign} ${Math.abs(cImag).toFixed(2)}i`;
+    `Klaar — exponent (${mode}): ${ec.a.toFixed(3)} ${sign} ${Math.abs(ec.b).toFixed(3)}i`;
 }
 </script>
 </body>
