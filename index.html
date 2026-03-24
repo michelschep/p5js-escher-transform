@@ -242,20 +242,18 @@
     </div>
   </div>
 
-  <!-- ③ Invers: z^(1/c) -->
+  <!-- ③ Invers: z^(1/c) — neemt resultaat van ② als invoer -->
   <div class="panel" id="panel-inv">
     <div class="panel-header">
-      ③ Invers
+      ③ Invers van ②
       <span class="formula-tag inv-tag">f(z) = z^(1/c)</span>
+      <span style="color:#484f58;font-size:10px;font-weight:400;margin-left:4px">— resultaat ② → invers → ③</span>
     </div>
-    <div class="upload-bar">
-      <input type="file" id="file-inv" accept="image/*" style="display:none" />
-      <img id="thumb-inv" class="thumb" alt="" />
-      <span class="upload-hint-sm" id="hint-inv">Geen afbeelding geladen</span>
-      <button class="btn-upload" onclick="document.getElementById('file-inv').click()">📁 Upload</button>
+    <div class="upload-bar" style="justify-content:center;color:#484f58;font-size:11px;font-style:italic;">
+      Gebruikt automatisch het resultaat van paneel ②
     </div>
     <div class="panel-body">
-      <div class="result-placeholder" id="ph-inv">Upload een afbeelding<br/>en kies c in paneel ①<br/><br/><span style="color:#21262d">Tip: c = 1 + 1i</span></div>
+      <div class="result-placeholder" id="ph-inv">Voer eerst de voorwaartse<br/>transformatie uit in paneel ②</div>
       <canvas class="result-canvas" id="canvas-inv"></canvas>
     </div>
     <div class="status-bar">
@@ -270,8 +268,8 @@
 // ── State ────────────────────────────────────────────────────────────────────
 let cReal = 2.0;
 let cImag = 0.0;
-const sources = { fwd: null, inv: null };
-const timers  = { fwd: null, inv: null };
+let sourceImgFwd = null;
+const timers = { fwd: null, inv: null };
 
 // ── Effective exponents ───────────────────────────────────────────────────────
 function exponentFor(mode) {
@@ -351,7 +349,7 @@ new p5(function (p) {
     updateCLabels();
     p.redraw();
     scheduleTransform('fwd');
-    scheduleTransform('inv');
+    // inv wordt automatisch gestart nadat fwd klaar is
   }
 
   p.mousePressed = pick;
@@ -370,7 +368,7 @@ function updateCLabels() {
     `1/c = ${a.toFixed(3)} ${is} ${Math.abs(b).toFixed(3)}i`;
 }
 
-// ── File upload (generic for both panels) ────────────────────────────────────
+// ── File upload (forward only) ────────────────────────────────────────────────
 function setupUpload(inputId, thumbId, hintId, mode) {
   document.getElementById(inputId).addEventListener('change', function (e) {
     const file = e.target.files[0];
@@ -379,7 +377,7 @@ function setupUpload(inputId, thumbId, hintId, mode) {
     reader.onload = (ev) => {
       const img = new Image();
       img.onload = () => {
-        sources[mode] = img;
+        sourceImgFwd = img;
         const thumb = document.getElementById(thumbId);
         thumb.src = ev.target.result;
         thumb.style.display = 'block';
@@ -393,7 +391,6 @@ function setupUpload(inputId, thumbId, hintId, mode) {
 }
 
 setupUpload('file-fwd', 'thumb-fwd', 'hint-fwd', 'fwd');
-setupUpload('file-inv', 'thumb-inv', 'hint-inv', 'inv');
 
 // ── Transform ─────────────────────────────────────────────────────────────────
 function scheduleTransform(mode) {
@@ -402,9 +399,16 @@ function scheduleTransform(mode) {
 }
 
 function runTransform(mode) {
-  if (!sources[mode]) {
-    document.getElementById('status-' + mode).textContent = 'Geen afbeelding geladen.';
+  if (mode === 'fwd' && !sourceImgFwd) {
+    document.getElementById('status-fwd').textContent = 'Geen afbeelding geladen.';
     return;
+  }
+  if (mode === 'inv') {
+    const fwdCnv = document.getElementById('canvas-fwd');
+    if (fwdCnv.style.display === 'none' || fwdCnv.width === 0) {
+      document.getElementById('status-inv').textContent = 'Voer eerst voorwaartse transform uit.';
+      return;
+    }
   }
   document.getElementById('status-' + mode).textContent = 'Berekenen…';
   requestAnimationFrame(() => performTransform(mode));
@@ -413,16 +417,25 @@ function runTransform(mode) {
 function performTransform(mode) {
   const RES   = 420;
   const RANGE = 2.5;
-  const src   = sources[mode];
   const { a, b } = exponentFor(mode);
 
-  // Read source pixels
-  const srcOff = document.createElement('canvas');
-  srcOff.width = src.naturalWidth; srcOff.height = src.naturalHeight;
-  const srcCtx = srcOff.getContext('2d');
-  srcCtx.drawImage(src, 0, 0);
-  const srcData = srcCtx.getImageData(0, 0, srcOff.width, srcOff.height).data;
-  const sW = srcOff.width, sH = srcOff.height;
+  // Source: forward uses uploaded image; inverse uses the forward result canvas
+  let srcData, sW, sH;
+  if (mode === 'fwd') {
+    const srcOff = document.createElement('canvas');
+    srcOff.width = sourceImgFwd.naturalWidth;
+    srcOff.height = sourceImgFwd.naturalHeight;
+    const srcCtx = srcOff.getContext('2d');
+    srcCtx.drawImage(sourceImgFwd, 0, 0);
+    srcData = srcCtx.getImageData(0, 0, srcOff.width, srcOff.height).data;
+    sW = srcOff.width; sH = srcOff.height;
+  } else {
+    // Read pixels directly from the forward result canvas
+    const fwdCnv = document.getElementById('canvas-fwd');
+    const fwdCtx = fwdCnv.getContext('2d');
+    srcData = fwdCtx.getImageData(0, 0, fwdCnv.width, fwdCnv.height).data;
+    sW = fwdCnv.width; sH = fwdCnv.height;
+  }
 
   // Prepare result canvas
   const cnv = document.getElementById('canvas-' + mode);
@@ -476,6 +489,9 @@ function performTransform(mode) {
   const label = mode === 'fwd' ? 'c' : '1/c';
   document.getElementById('status-' + mode).textContent =
     `Klaar — ${label} = ${a.toFixed(3)} ${sign} ${Math.abs(b).toFixed(3)}i`;
+
+  // After forward transform completes, automatically run inverse
+  if (mode === 'fwd') scheduleTransform('inv');
 }
 </script>
 </body>
