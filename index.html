@@ -28,17 +28,8 @@
       flex-shrink: 0;
     }
 
-    header h1 {
-      font-size: 14px;
-      font-weight: 600;
-      color: #58a6ff;
-      letter-spacing: 1px;
-    }
-
-    header p {
-      font-size: 11px;
-      color: #8b949e;
-    }
+    header h1 { font-size: 14px; font-weight: 600; color: #58a6ff; letter-spacing: 1px; }
+    header p  { font-size: 11px; color: #8b949e; }
 
     #panels {
       display: flex;
@@ -56,163 +47,157 @@
       min-width: 0;
     }
 
+    /* wider C-selector, narrower transform panels */
+    #panel-c    { flex: 1.1; }
+    #panel-fwd  { flex: 1.45; }
+    #panel-inv  { flex: 1.45; }
+
     .panel-header {
-      padding: 8px 14px;
+      padding: 7px 12px;
       background: #161b22;
       border-bottom: 1px solid #30363d;
       font-size: 12px;
       font-weight: 600;
       color: #c9d1d9;
-      white-space: nowrap;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .formula-tag {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .fwd-tag { background: #1f3a5f; color: #58a6ff; }
+    .inv-tag { background: #3a1f2f; color: #f778ba; }
+
+    /* ── C-selector ── */
+    #c-holder canvas { display: block; border-radius: 4px; cursor: crosshair; }
+
+    #c-label {
+      padding: 5px 12px;
+      background: #161b22;
+      border-top: 1px solid #30363d;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #ff7b72;
+      text-align: center;
       flex-shrink: 0;
     }
 
+    #inv-c-label {
+      padding: 2px 12px 5px;
+      background: #161b22;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: #f778ba;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Upload bar (compact, top of transform panels) ── */
+    .upload-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      background: #0d1117;
+      border-bottom: 1px solid #21262d;
+      flex-shrink: 0;
+    }
+
+    .thumb {
+      width: 48px;
+      height: 36px;
+      object-fit: cover;
+      border-radius: 3px;
+      border: 1px solid #30363d;
+      display: none;
+      flex-shrink: 0;
+    }
+
+    .upload-hint-sm {
+      font-size: 11px;
+      color: #484f58;
+      flex: 1;
+    }
+
+    .btn-upload {
+      padding: 5px 14px;
+      border: 1px solid #30363d;
+      border-radius: 5px;
+      background: #21262d;
+      color: #c9d1d9;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+    .btn-upload:hover { background: #30363d; }
+
+    /* ── Result area ── */
     .panel-body {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 10px;
       overflow: hidden;
       position: relative;
     }
 
-    /* ── Panel 1: C-selector ── */
-    #c-holder canvas {
-      display: block;
-      border-radius: 4px;
-      cursor: crosshair;
-    }
-
-    #c-label {
-      padding: 6px 14px;
-      background: #161b22;
-      border-top: 1px solid #30363d;
-      font-family: 'Courier New', monospace;
-      font-size: 13px;
-      color: #ff7b72;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    /* ── Panel 2: Upload ── */
-    .upload-zone {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      width: 100%;
-      height: 100%;
-    }
-
-    #file-input { display: none; }
-
-    .btn {
-      padding: 8px 22px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      transition: filter 0.15s;
-      flex-shrink: 0;
-    }
-    .btn:hover { filter: brightness(1.15); }
-    .btn-upload { background: #238636; color: #fff; }
-    .btn-transform { background: #1f6feb; color: #fff; padding: 6px 16px; font-size: 12px; }
-
-    #source-img {
-      max-width: 100%;
-      max-height: calc(100% - 70px);
-      object-fit: contain;
-      border-radius: 4px;
-      border: 1px solid #30363d;
-      display: none;
-    }
-
-    #upload-hint {
-      color: #484f58;
-      font-size: 12px;
-      text-align: center;
-      line-height: 1.8;
-    }
-
-    /* ── Panel 3: Result ── */
-    #result-canvas {
+    .result-canvas {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      border-radius: 4px;
+      border-radius: 3px;
       display: none;
     }
 
-    #result-placeholder {
-      color: #484f58;
-      font-size: 13px;
+    .result-placeholder {
+      color: #30363d;
+      font-size: 12px;
       text-align: center;
       line-height: 2;
+      padding: 16px;
     }
 
-    .result-footer {
-      padding: 5px 10px;
+    .status-bar {
+      padding: 4px 10px;
       background: #161b22;
       border-top: 1px solid #30363d;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
-    #status-text {
-      font-size: 11px;
-      color: #8b949e;
-      font-family: monospace;
-    }
-
-    /* ── Direction toggle ── */
-    .dir-toggle {
-      display: flex;
-      border: 1px solid #30363d;
-      border-radius: 5px;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .dir-btn {
+    .btn-transform {
       padding: 4px 12px;
       border: none;
-      background: transparent;
-      color: #8b949e;
-      cursor: pointer;
-      font-size: 11px;
-      font-family: 'Courier New', monospace;
-      font-weight: 600;
-      transition: background 0.15s, color 0.15s;
-      white-space: nowrap;
-    }
-
-    .dir-btn + .dir-btn {
-      border-left: 1px solid #30363d;
-    }
-
-    .dir-btn.active {
+      border-radius: 5px;
       background: #1f6feb;
       color: #fff;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: filter 0.15s;
     }
+    .btn-transform:hover { filter: brightness(1.2); }
 
-    .dir-btn:hover:not(.active) {
-      background: #21262d;
-      color: #c9d1d9;
-    }
-
-    #effective-c {
+    .status-text {
       font-size: 10px;
       color: #6e7681;
       font-family: 'Courier New', monospace;
-      text-align: center;
-      padding: 2px 14px 4px;
-      flex-shrink: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -226,46 +211,56 @@
 <div id="panels">
 
   <!-- ① C-selector -->
-  <div class="panel">
-    <div class="panel-header">① Kies complexe constante c &nbsp;<span style="color:#8b949e;font-weight:400">(klik of sleep)</span></div>
-    <div class="panel-body">
+  <div class="panel" id="panel-c">
+    <div class="panel-header">① Kies c &nbsp;<span style="color:#8b949e;font-weight:400;font-size:11px">(klik of sleep)</span></div>
+    <div class="panel-body" style="padding:10px;">
       <div id="c-holder"></div>
     </div>
     <div id="c-label">c = 2.00 + 0.00i</div>
+    <div id="inv-c-label">1/c = 0.500 + 0.000i</div>
   </div>
 
-  <!-- ② Upload -->
-  <div class="panel">
-    <div class="panel-header">② Upload bronafbeelding</div>
+  <!-- ② Voorwaarts: z^c -->
+  <div class="panel" id="panel-fwd">
+    <div class="panel-header">
+      ② Voorwaarts
+      <span class="formula-tag fwd-tag">f(z) = z^c</span>
+    </div>
+    <div class="upload-bar">
+      <input type="file" id="file-fwd" accept="image/*" style="display:none" />
+      <img id="thumb-fwd" class="thumb" alt="" />
+      <span class="upload-hint-sm" id="hint-fwd">Geen afbeelding geladen</span>
+      <button class="btn-upload" onclick="document.getElementById('file-fwd').click()">📁 Upload</button>
+    </div>
     <div class="panel-body">
-      <div class="upload-zone">
-        <input type="file" id="file-input" accept="image/*" />
-        <button class="btn btn-upload" onclick="document.getElementById('file-input').click()">
-          📁 Kies afbeelding
-        </button>
-        <img id="source-img" alt="Bronafbeelding" />
-        <span id="upload-hint">Nog geen afbeelding geladen.<br />Ondersteunt PNG, JPG, GIF, WebP.</span>
-      </div>
+      <div class="result-placeholder" id="ph-fwd">Upload een afbeelding<br/>en kies c in paneel ①<br/><br/><span style="color:#21262d">Tip: c = 0.5 + 0.5i</span></div>
+      <canvas class="result-canvas" id="canvas-fwd"></canvas>
+    </div>
+    <div class="status-bar">
+      <button class="btn-transform" onclick="runTransform('fwd')">▶ Transformeer</button>
+      <span class="status-text" id="status-fwd"></span>
     </div>
   </div>
 
-  <!-- ③ Resultaat -->
-  <div class="panel">
-    <div class="panel-header" style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-      <span>③ Resultaat: <span id="formula-label" style="font-family:'Courier New',monospace;color:#58a6ff">f(z) = z^c</span></span>
-      <div class="dir-toggle">
-        <button class="dir-btn active" id="btn-forward" onclick="setDirection(false)">→ &nbsp;Voorwaarts &nbsp;z^c</button>
-        <button class="dir-btn"        id="btn-inverse" onclick="setDirection(true)" >← &nbsp;Invers &nbsp;z^(1/c)</button>
-      </div>
+  <!-- ③ Invers: z^(1/c) -->
+  <div class="panel" id="panel-inv">
+    <div class="panel-header">
+      ③ Invers
+      <span class="formula-tag inv-tag">f(z) = z^(1/c)</span>
     </div>
-    <div class="panel-body" id="result-panel">
-      <div id="result-placeholder">Upload een afbeelding<br />en kies een waarde voor c<br /><br /><span style="font-size:11px;color:#30363d">Tip: probeer c = 0.5 + 0.5i<br />voor een spiraaleffect</span></div>
-      <canvas id="result-canvas"></canvas>
+    <div class="upload-bar">
+      <input type="file" id="file-inv" accept="image/*" style="display:none" />
+      <img id="thumb-inv" class="thumb" alt="" />
+      <span class="upload-hint-sm" id="hint-inv">Geen afbeelding geladen</span>
+      <button class="btn-upload" onclick="document.getElementById('file-inv').click()">📁 Upload</button>
     </div>
-    <div id="effective-c">&nbsp;</div>
-    <div class="result-footer">
-      <button class="btn btn-transform" onclick="runTransform()">▶ Transformeer</button>
-      <span id="status-text"></span>
+    <div class="panel-body">
+      <div class="result-placeholder" id="ph-inv">Upload een afbeelding<br/>en kies c in paneel ①<br/><br/><span style="color:#21262d">Tip: c = 1 + 1i</span></div>
+      <canvas class="result-canvas" id="canvas-inv"></canvas>
+    </div>
+    <div class="status-bar">
+      <button class="btn-transform" onclick="runTransform('inv')">▶ Transformeer</button>
+      <span class="status-text" id="status-inv"></span>
     </div>
   </div>
 
@@ -275,22 +270,13 @@
 // ── State ────────────────────────────────────────────────────────────────────
 let cReal = 2.0;
 let cImag = 0.0;
-let useInverse = false;
-let sourceImgEl = null;
-let transformTimer = null;
+const sources = { fwd: null, inv: null };
+const timers  = { fwd: null, inv: null };
 
-// ── Direction toggle ──────────────────────────────────────────────────────────
-function setDirection(inv) {
-  useInverse = inv;
-  document.getElementById('btn-forward').classList.toggle('active', !inv);
-  document.getElementById('btn-inverse').classList.toggle('active',  inv);
-  updateCLabel();
-  scheduleTransform();
-}
-
-// Return the effective exponent: c for forward, 1/c for inverse
-function getEffectiveC() {
-  if (!useInverse) return { a: cReal, b: cImag };
+// ── Effective exponents ───────────────────────────────────────────────────────
+function exponentFor(mode) {
+  if (mode === 'fwd') return { a: cReal, b: cImag };
+  // inverse: exponent = 1/c = conj(c) / |c|²
   const denom = cReal * cReal + cImag * cImag;
   if (denom < 1e-18) return { a: 0, b: 0 };
   return { a: cReal / denom, b: -cImag / denom };
@@ -298,21 +284,14 @@ function getEffectiveC() {
 
 // ── C-selector (p5.js instance) ──────────────────────────────────────────────
 new p5(function (p) {
-  const SZ    = 320;
+  const SZ    = 300;
   const RANGE = 2.5;
 
   function toCanvas(re, im) {
-    return {
-      x: p.map(re, -RANGE, RANGE, 0, SZ),
-      y: p.map(im,  RANGE, -RANGE, 0, SZ),
-    };
+    return { x: p.map(re, -RANGE, RANGE, 0, SZ), y: p.map(im, RANGE, -RANGE, 0, SZ) };
   }
-
   function toComplex(cx, cy) {
-    return {
-      re: p.map(cx, 0, SZ, -RANGE, RANGE),
-      im: p.map(cy, 0, SZ,  RANGE, -RANGE),
-    };
+    return { re: p.map(cx, 0, SZ, -RANGE, RANGE), im: p.map(cy, 0, SZ, RANGE, -RANGE) };
   }
 
   p.setup = function () {
@@ -324,64 +303,44 @@ new p5(function (p) {
     p.background(13, 17, 23);
 
     // Minor grid
-    p.stroke(25, 35, 50);
-    p.strokeWeight(0.5);
+    p.stroke(25, 35, 50); p.strokeWeight(0.5);
     for (let v = -RANGE; v <= RANGE + 0.01; v += 0.5) {
-      const cx = toCanvas(v, 0).x;
-      const cy = toCanvas(0, v).y;
-      p.line(cx, 0, cx, SZ);
-      p.line(0, cy, SZ, cy);
+      p.line(toCanvas(v, 0).x, 0, toCanvas(v, 0).x, SZ);
+      p.line(0, toCanvas(0, v).y, SZ, toCanvas(0, v).y);
     }
 
-    // Major axes
+    // Axes
     const O = toCanvas(0, 0);
-    p.stroke(60, 80, 120);
-    p.strokeWeight(1);
-    p.line(0, O.y, SZ, O.y);
-    p.line(O.x, 0, O.x, SZ);
+    p.stroke(60, 80, 120); p.strokeWeight(1);
+    p.line(0, O.y, SZ, O.y); p.line(O.x, 0, O.x, SZ);
 
     // Unit circle
     const r1 = toCanvas(1, 0).x - O.x;
-    p.noFill();
-    p.stroke(40, 90, 160);
-    p.strokeWeight(1);
+    p.noFill(); p.stroke(40, 90, 160); p.strokeWeight(1);
     p.ellipse(O.x, O.y, r1 * 2, r1 * 2);
 
-    // Axis labels
-    p.fill(80, 100, 140);
-    p.noStroke();
-    p.textSize(9);
-    p.textFont('monospace');
+    // Labels
+    p.fill(80, 100, 140); p.noStroke(); p.textSize(9); p.textFont('monospace');
     p.textAlign(p.CENTER, p.TOP);
-    for (let v = -2; v <= 2; v++) {
-      if (v === 0) continue;
-      const cx = toCanvas(v, 0);
-      p.text(v, cx.x, O.y + 4);
-    }
+    for (let v = -2; v <= 2; v++) { if (v !== 0) p.text(v, toCanvas(v, 0).x, O.y + 4); }
     p.textAlign(p.RIGHT, p.CENTER);
-    for (let v = -2; v <= 2; v++) {
-      if (v === 0) continue;
-      const cy = toCanvas(0, v);
-      p.text(v + 'i', O.x - 4, cy.y);
-    }
-    p.textAlign(p.LEFT, p.BOTTOM);
+    for (let v = -2; v <= 2; v++) { if (v !== 0) p.text(v + 'i', O.x - 4, toCanvas(0, v).y); }
     p.fill(60, 80, 120);
-    p.text('Re', SZ - 2, O.y - 2);
-    p.textAlign(p.LEFT, p.TOP);
-    p.text('Im', O.x + 4, 2);
+    p.textAlign(p.LEFT, p.BOTTOM); p.text('Re', SZ - 2, O.y - 2);
+    p.textAlign(p.LEFT, p.TOP);   p.text('Im', O.x + 4, 2);
 
-    // Crosshair for current c
+    // Crosshair + dot for c
     const pt = toCanvas(cReal, cImag);
-    p.stroke(255, 123, 114, 80);
-    p.strokeWeight(0.5);
-    p.line(pt.x, 0, pt.x, SZ);
-    p.line(0, pt.y, SZ, pt.y);
-
-    // Current c dot
-    p.fill(255, 123, 114);
-    p.stroke(255, 200, 190);
-    p.strokeWeight(1.5);
+    p.stroke(255, 123, 114, 70); p.strokeWeight(0.5);
+    p.line(pt.x, 0, pt.x, SZ); p.line(0, pt.y, SZ, pt.y);
+    p.fill(255, 123, 114); p.stroke(255, 200, 190); p.strokeWeight(1.5);
     p.ellipse(pt.x, pt.y, 11, 11);
+
+    // Dot for 1/c (inverse exponent)
+    const { a, b } = exponentFor('inv');
+    const ipt = toCanvas(a, b);
+    p.fill(247, 120, 186); p.stroke(255, 200, 230); p.strokeWeight(1);
+    p.ellipse(ipt.x, ipt.y, 8, 8);
   };
 
   function pick() {
@@ -389,134 +348,113 @@ new p5(function (p) {
     const c = toComplex(p.mouseX, p.mouseY);
     cReal = Math.round(c.re * 100) / 100;
     cImag = Math.round(c.im * 100) / 100;
-    updateCLabel();
+    updateCLabels();
     p.redraw();
-    scheduleTransform();
+    scheduleTransform('fwd');
+    scheduleTransform('inv');
   }
 
-  p.mousePressed  = pick;
-  p.mouseDragged  = pick;
+  p.mousePressed = pick;
+  p.mouseDragged = pick;
 
 }, 'c-holder');
 
-function updateCLabel() {
-  const sign = cImag >= 0 ? '+' : '−';
-  let text = `c = ${cReal.toFixed(2)} ${sign} ${Math.abs(cImag).toFixed(2)}i`;
+function updateCLabels() {
+  const cs  = cImag >= 0 ? '+' : '−';
+  document.getElementById('c-label').textContent =
+    `c = ${cReal.toFixed(2)} ${cs} ${Math.abs(cImag).toFixed(2)}i`;
 
-  const ec = getEffectiveC();
-  const esign = ec.b >= 0 ? '+' : '−';
-
-  if (useInverse) {
-    text += `     1/c = ${ec.a.toFixed(3)} ${esign} ${Math.abs(ec.b).toFixed(3)}i`;
-    document.getElementById('formula-label').textContent = 'f(z) = z^(1/c)';
-    document.getElementById('effective-c').textContent =
-      `effectieve exponent: ${ec.a.toFixed(3)} ${esign} ${Math.abs(ec.b).toFixed(3)}i`;
-  } else {
-    document.getElementById('formula-label').textContent = 'f(z) = z^c';
-    document.getElementById('effective-c').textContent = '\u00a0';
-  }
-
-  document.getElementById('c-label').textContent = text;
+  const { a, b } = exponentFor('inv');
+  const is = b >= 0 ? '+' : '−';
+  document.getElementById('inv-c-label').textContent =
+    `1/c = ${a.toFixed(3)} ${is} ${Math.abs(b).toFixed(3)}i`;
 }
 
-// ── File upload ───────────────────────────────────────────────────────────────
-document.getElementById('file-input').addEventListener('change', function (e) {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    const img = new Image();
-    img.onload = () => {
-      sourceImgEl = img;
-      const preview = document.getElementById('source-img');
-      preview.src   = ev.target.result;
-      preview.style.display = 'block';
-      document.getElementById('upload-hint').style.display = 'none';
-      scheduleTransform();
+// ── File upload (generic for both panels) ────────────────────────────────────
+function setupUpload(inputId, thumbId, hintId, mode) {
+  document.getElementById(inputId).addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        sources[mode] = img;
+        const thumb = document.getElementById(thumbId);
+        thumb.src = ev.target.result;
+        thumb.style.display = 'block';
+        document.getElementById(hintId).textContent = file.name;
+        scheduleTransform(mode);
+      };
+      img.src = ev.target.result;
     };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-});
-
-// ── Transform ─────────────────────────────────────────────────────────────────
-function scheduleTransform() {
-  clearTimeout(transformTimer);
-  transformTimer = setTimeout(runTransform, 300);
-}
-
-function runTransform() {
-  if (!sourceImgEl) {
-    document.getElementById('status-text').textContent = 'Geen afbeelding geladen.';
-    return;
-  }
-  document.getElementById('status-text').textContent = 'Berekenen…';
-  // Defer so the browser can paint the status update first
-  requestAnimationFrame(() => {
-    performTransform();
+    reader.readAsDataURL(file);
   });
 }
 
-function performTransform() {
-  const RES   = 420;   // output resolution
-  const RANGE = 2.5;   // complex plane visible from -RANGE to +RANGE
+setupUpload('file-fwd', 'thumb-fwd', 'hint-fwd', 'fwd');
+setupUpload('file-inv', 'thumb-inv', 'hint-inv', 'inv');
 
-  // ── Read source pixels ────────────────────────────────────────────────────
-  const srcOff    = document.createElement('canvas');
-  srcOff.width    = sourceImgEl.naturalWidth;
-  srcOff.height   = sourceImgEl.naturalHeight;
-  const srcCtx    = srcOff.getContext('2d');
-  srcCtx.drawImage(sourceImgEl, 0, 0);
-  const srcData   = srcCtx.getImageData(0, 0, srcOff.width, srcOff.height).data;
-  const sW = srcOff.width;
-  const sH = srcOff.height;
+// ── Transform ─────────────────────────────────────────────────────────────────
+function scheduleTransform(mode) {
+  clearTimeout(timers[mode]);
+  timers[mode] = setTimeout(() => runTransform(mode), 300);
+}
 
-  // ── Prepare result canvas ─────────────────────────────────────────────────
-  const resCnv        = document.getElementById('result-canvas');
-  resCnv.width        = RES;
-  resCnv.height       = RES;
-  resCnv.style.display = 'block';
-  document.getElementById('result-placeholder').style.display = 'none';
+function runTransform(mode) {
+  if (!sources[mode]) {
+    document.getElementById('status-' + mode).textContent = 'Geen afbeelding geladen.';
+    return;
+  }
+  document.getElementById('status-' + mode).textContent = 'Berekenen…';
+  requestAnimationFrame(() => performTransform(mode));
+}
 
-  const resCtx  = resCnv.getContext('2d');
-  const resImg  = resCtx.createImageData(RES, RES);
-  const resPx   = resImg.data;
+function performTransform(mode) {
+  const RES   = 420;
+  const RANGE = 2.5;
+  const src   = sources[mode];
+  const { a, b } = exponentFor(mode);
 
-  const { a, b } = getEffectiveC();
+  // Read source pixels
+  const srcOff = document.createElement('canvas');
+  srcOff.width = src.naturalWidth; srcOff.height = src.naturalHeight;
+  const srcCtx = srcOff.getContext('2d');
+  srcCtx.drawImage(src, 0, 0);
+  const srcData = srcCtx.getImageData(0, 0, srcOff.width, srcOff.height).data;
+  const sW = srcOff.width, sH = srcOff.height;
 
-  // ── Pixel loop ────────────────────────────────────────────────────────────
-  // For each output pixel (px,py):
-  //   1. Map to complex z (result space)
-  //   2. Compute w = z^c  (complex power via w = exp(c·ln z))
-  //   3. Map w to source image UV coords (inverse sample)
+  // Prepare result canvas
+  const cnv = document.getElementById('canvas-' + mode);
+  cnv.width = RES; cnv.height = RES;
+  cnv.style.display = 'block';
+  document.getElementById('ph-' + mode).style.display = 'none';
+
+  const ctx  = cnv.getContext('2d');
+  const img  = ctx.createImageData(RES, RES);
+  const px   = img.data;
+
+  // Pixel loop: for each output pixel map via z^exponent → source UV
   for (let py = 0; py < RES; py++) {
-    for (let px = 0; px < RES; px++) {
-      // Output pixel → complex z  (y axis flipped: top = +Im)
-      const zx = (px / RES) * 2 * RANGE - RANGE;
-      const zy = RANGE - (py / RES) * 2 * RANGE;
-
+    for (let pxi = 0; pxi < RES; pxi++) {
+      const zx = (pxi / RES) * 2 * RANGE - RANGE;
+      const zy = RANGE - (py  / RES) * 2 * RANGE;
       const r2  = zx * zx + zy * zy;
-      const idx = (py * RES + px) * 4;
+      const idx = (py * RES + pxi) * 4;
 
       if (r2 < 1e-18) {
-        // z ≈ 0  →  z^c is 0 for Re(c)>0, undefined otherwise → black
-        resPx[idx] = resPx[idx+1] = resPx[idx+2] = 0;
-        resPx[idx+3] = 255;
+        px[idx] = px[idx+1] = px[idx+2] = 0; px[idx+3] = 255;
         continue;
       }
 
-      // w = z^c = exp(c · ln z)
-      // ln z = ln|z| + i·arg(z)
-      // c · ln z = (a + bi)(lnR + iθ) = (a·lnR − b·θ) + i·(b·lnR + a·θ)
-      const lnR   = 0.5 * Math.log(r2);          // ln|z| = ½·ln(|z|²)
+      // w = z^exp = exp(exp · ln z)
+      const lnR  = 0.5 * Math.log(r2);
       const theta = Math.atan2(zy, zx);
-      const expR  = Math.exp(a * lnR - b * theta);
-      const angle = b * lnR + a * theta;
-      const wx    = expR * Math.cos(angle);
-      const wy    = expR * Math.sin(angle);
+      const wR   = Math.exp(a * lnR - b * theta);
+      const wAng = b * lnR + a * theta;
+      const wx   = wR * Math.cos(wAng);
+      const wy   = wR * Math.sin(wAng);
 
-      // Map w → source image UV ∈ [0,1]
       const u  = (wx + RANGE) / (2 * RANGE);
       const v  = 1.0 - (wy + RANGE) / (2 * RANGE);
       const sx = Math.floor(u * sW);
@@ -524,25 +462,22 @@ function performTransform() {
 
       if (sx >= 0 && sx < sW && sy >= 0 && sy < sH) {
         const si = (sy * sW + sx) * 4;
-        resPx[idx]   = srcData[si];
-        resPx[idx+1] = srcData[si + 1];
-        resPx[idx+2] = srcData[si + 2];
-        resPx[idx+3] = 255;
+        px[idx] = srcData[si]; px[idx+1] = srcData[si+1];
+        px[idx+2] = srcData[si+2]; px[idx+3] = 255;
       } else {
-        // Outside source bounds → dark background
-        resPx[idx] = 13; resPx[idx+1] = 17; resPx[idx+2] = 23; resPx[idx+3] = 255;
+        px[idx] = 13; px[idx+1] = 17; px[idx+2] = 23; px[idx+3] = 255;
       }
     }
   }
 
-  resCtx.putImageData(resImg, 0, 0);
+  ctx.putImageData(img, 0, 0);
 
-  const ec = getEffectiveC();
-  const sign = ec.b >= 0 ? '+' : '−';
-  const mode = useInverse ? '1/c' : 'c';
-  document.getElementById('status-text').textContent =
-    `Klaar — exponent (${mode}): ${ec.a.toFixed(3)} ${sign} ${Math.abs(ec.b).toFixed(3)}i`;
+  const sign  = b >= 0 ? '+' : '−';
+  const label = mode === 'fwd' ? 'c' : '1/c';
+  document.getElementById('status-' + mode).textContent =
+    `Klaar — ${label} = ${a.toFixed(3)} ${sign} ${Math.abs(b).toFixed(3)}i`;
 }
 </script>
 </body>
 </html>
+
